@@ -1,6 +1,20 @@
 #include <iostream>
 #include <string>
 
+struct book{
+    std::string name;
+    int release;
+};
+
+bool operator== (book& lhs, book& rhs){
+    return lhs.name == rhs.name;
+}
+
+std::ostream& operator<< (std::ostream& stream, const book& b){
+    stream << b.name << ' ' << b.release;
+    return stream;
+}
+
 template<typename tn>
 struct Node{
     Node* next = nullptr;
@@ -46,9 +60,9 @@ public:
     void PushByIndex(int number, tn value){
         if (number == 0){
             PushForward(value);
-        } else if (number == size()-1){
+        } else if (number == size()){
             PushBack(value);
-        } else if (number < size()-1){
+        } else if (number < size()){
             int counter = 0;
             Node<tn>* temp = first;
             while (counter != number){
@@ -57,10 +71,10 @@ public:
             }
             auto* node = new Node<tn>;
             node->value = value;
-            temp->next->prev = node;
-            node->next = temp->next;
-            temp->next = node;
-            node->prev = temp;
+            temp->prev->next = node;
+            node->prev = temp->prev;
+            temp->prev = node;
+            node->next = temp;
         } else {
             std::cout << "Index out of range" << std::endl;
         }
@@ -170,15 +184,16 @@ public:
 };
 int main() {
     //Не пишите только так, чтобы элементы был вне списка, иначе программа сломается :)
-    //для пользовательского типа нужно будет перегрузить операторы << и ==
+
     //Блок тестов для проверки раоты программы со строками
-    List <std::string> Mylist;
+    /*List <std::string> Mylist;
     Mylist.PushBack("World");
     Mylist.PushForward("Hello");
     Mylist.PushBack("Matvey");
-    Mylist.PushByIndex(1, "I'm");
+    Mylist.PushByIndex(2, "I'm");
     Mylist.PushByIndex(5, "and");
-    std::string str = Mylist[0];
+    Mylist.print();
+    std::cout << Mylist[0] << std::endl;
     std::cout << Mylist.find("World") << std::endl;
     std::cout << Mylist.find("Worlddfw") << std::endl;
     std::cout << Mylist.size() << std::endl;
@@ -188,7 +203,26 @@ int main() {
     std::cout << Mylist.remove(1) << std::endl;
     Mylist.print();
     Mylist.clear();
-    std::cout << Mylist.size() << std::endl;
+    std::cout << Mylist.size() << std::endl;*/
+
+    //Блок тестов пользовательского типа
+    List <book> library;
+    library.PushBack({"The Master and Margarita", 1948});
+    library.PushForward({"Asya",1858});
+    library.PushBack({"Fathers And Sons", 1862});
+    library.PushByIndex(2, {"Count Of Monte Cristo", 1845});
+    library.PushByIndex(5, {"Harry Potter", 1997});
+    std::cout << library[0] << std::endl;
+    std::cout << library.find({"The Master and Margarita", 1948}) << std::endl;
+    std::cout << library.find({"Worlddfw", 187}) << std::endl;
+    std::cout << library.size() << std::endl;
+    library.print();
+    std::cout << library.remove(1) << std::endl;
+    library.print();
+    std::cout << library.remove(1) << std::endl;
+    library.print();
+    library.clear();
+    std::cout << library.size() << std::endl;
 
     //Блок тестов проверки раоты программы с целыми значениями
     /*List <int> Mylist;
